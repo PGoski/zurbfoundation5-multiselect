@@ -135,7 +135,11 @@
         var checked=$("div#"+rel+" ul li input:checked").length;
         var tot=$("div#"+rel+" ul li input:checkbox").length;
 
-        if(checked>0) {
+        if(checked == 1) {
+            var text = $("div#"+rel+" ul li input:checked").val();
+            $(".zselect#"+rel+" span.zmshead").text(text);
+        }
+        else if(checked > 1) {
             $(".zselect#"+rel+" span.zmshead").text(counter[0]+" "+checked+" "+counter[1]+" "+tot);
         }
         else {
