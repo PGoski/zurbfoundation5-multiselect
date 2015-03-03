@@ -217,6 +217,51 @@
                 });
                 $('#'+id+' span.zmshead').html( (options.placeholder===undefined) ? '&nbsp;' : options.placeholder );
 
+                if(options.filter === true){
+                    //defaults
+                    if (options.filterResult === undefined) options.filterResult = true;
+                    if (options.filterResultText === undefined) options.filterResultText = 'showed';
+                    var fplaholder = (options.filterPlaceholder !== undefined) ? options.filterPlaceholder : "Filter...";
+
+
+                    var rel = id;
+                    $("div#"+rel+" ul").prepend('<li class="zmsfilter"><input type="text" placeholder="'+fplaholder+'" /></li>');
+
+
+
+                    if(options.filterResult === true)
+                        $("div#"+rel+" ul").append('<li class="filterResult"></li>');
+
+                    $("div#"+rel+" ul li.zmsfilter input").keyup(function(){
+                        var value=$(this).val().toLowerCase();
+                        var show=0,tot=$("div#"+rel+" ul li input:checkbox").length;
+                        $("div#"+rel+" ul li input:checkbox").filter( function(i,v) {
+                            //console.log($(v).val());
+                            //console.log($(v).parent().text());
+                            if( $(v).val().toLowerCase().indexOf(value) === -1 && $(v).parent().text().toLowerCase().indexOf(value) === -1 ){//and text() check...
+                                $(v).parent().hide();
+
+                            }
+                            else {
+                                $(v).parent().show();
+                                show++;
+                            }
+
+                        });
+
+                        if(options.filterResult === true)
+                            $("div#"+rel+" ul li.filterResult").text(options.filterResultText + ' '+show+'/'+tot);
+
+                    });
+                }//end filter
+
+                if(options.live !== undefined){
+                    var rel = id;
+                    $(".zselect#"+rel).on('change','input:checkbox',function(e){
+                        $(options.live).val( methods.getValue($("select[rel='"+rel+"']")) );
+                    });
+                }//end live
+
                 // Updates original select after checkbox update
                 $(".zselect#"+id).on('change', 'input:checkbox', function() {
                     var container = $(this).closest('.zselect');
@@ -236,52 +281,6 @@
                     select.trigger('change');
                 });
             });
-
-            if(options.filter === true){
-                //defaults
-                if (options.filterResult === undefined) options.filterResult = true;
-                if (options.filterResultText === undefined) options.filterResultText = 'showed';
-                var fplaholder = (options.filterPlaceholder !== undefined) ? options.filterPlaceholder : "Filter...";
-
-
-                var rel = this.attr('rel');
-                $("div#"+rel+" ul").prepend('<li class="zmsfilter"><input type="text" placeholder="'+fplaholder+'" /></li>');
-
-
-
-                if(options.filterResult === true)
-                    $("div#"+rel+" ul").append('<li class="filterResult"></li>');
-
-                $("div#"+rel+" ul li.zmsfilter input").keyup(function(){
-                    var value=$(this).val().toLowerCase();
-                    var show=0,tot=$("div#"+rel+" ul li input:checkbox").length;
-                    $("div#"+rel+" ul li input:checkbox").filter( function(i,v) {
-                        //console.log($(v).val());
-                        //console.log($(v).parent().text());
-                        if( $(v).val().toLowerCase().indexOf(value) === -1 && $(v).parent().text().toLowerCase().indexOf(value) === -1 ){//and text() check...
-                            $(v).parent().hide();
-
-                        }
-                        else {
-                            $(v).parent().show();
-                            show++;
-                        }
-
-                    });
-
-                    if(options.filterResult === true)
-                        $("div#"+rel+" ul li.filterResult").text(options.filterResultText + ' '+show+'/'+tot);
-
-                });
-            }//end filter
-
-
-            if(options.live !== undefined){
-                var rel = this.attr('rel');
-                $(".zselect#"+rel).on('change','input:checkbox',function(e){
-                    $(options.live).val( methods.getValue($("select[rel='"+rel+"']")) );
-                });
-            }//end live
 
 
             if(options.get !== undefined){  //console.log(options.get);
