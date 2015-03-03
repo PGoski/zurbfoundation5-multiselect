@@ -266,6 +266,14 @@
                     });
                 }//end live
 
+                if(options.singleSelect !== undefined){
+                    var rel = id;
+                    $(".zselect#"+rel).on('change','input:checkbox',function(e){
+                        $(e.delegateTarget).find("ul input:checkbox").not(e.target).prop('checked', false);
+                        $(e.delegateTarget).find("ul").hide();
+                    });
+                }//end live
+
                 // Updates original select after checkbox update
                 $(".zselect#"+id).on('change', 'input:checkbox', function() {
                     var container = $(this).closest('.zselect');
